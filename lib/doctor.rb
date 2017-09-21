@@ -1,38 +1,35 @@
 class Doctor
   attr_reader :id, :specialty
-  attr_accessor :name
+  attr_accessor :doctor_name
   #iniitlize doctor
   def initialize(attributes)
     @id = attributes.fetch(:id)
     @specialty = attributes.fetch(:specialty)
-    @name = attributes.fetch(:name)
+    @doctor_name = attributes.fetch(:doctor_name)
   end
 
   def self.all
     returned_doctors = DB.exec("SELECT * FROM doctors;")
     doctors = []
     returned_doctors.each() do |doctor|
-      name = doctor.fetch("name")
+      doctor_name = doctor.fetch("doctor_name")
       id = doctor.fetch("id").to_i
       specialty = doctor.fetch("specialty")
-      doctors.push(Doctor.new({:name => name, :specialty => specialty, :id => id}))
+      doctors.push(Doctor.new({:doctor_name => doctor_name, :specialty => specialty, :id => id}))
     end
     doctors
   end
 
   # doctor.save()
   def save()
-    result = DB.exec("INSERT INTO doctors (name, specialty) VALUES ('#{@name}', '#{@specialty}') RETURNING id;")
+    result = DB.exec("INSERT INTO doctors (doctor_name, specialty) VALUES ('#{@doctor_name}', '#{@specialty}') RETURNING id;")
     @id = result.first().fetch("id").to_i()
   end
 
   def ==(another_list)
-    (self.name.==another_list.name).&(self.id.==another_list.id)
+    (self.doctor_name.==another_list.doctor_name).&(self.id.==another_list.id)
   end
-  # doctor.find(id or name?)
-
-  #doctor.all()
-    # lists doctors
+  # doctor.find(id or doctor_name?)
 
   #doctor.assign()
   #send doctor foreign key to patient
